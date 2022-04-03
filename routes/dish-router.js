@@ -2,17 +2,17 @@ const express = require('express');
 const body_parser = require('body-parser');
 
 const dish_router = express.Router();
-const dish_router_id = express.Router();
 
 dish_router.use(body_parser.json());
-dish_router_id.use(body_parser.json());
+
+const header = (req, res, next) => {
+    res.statusCode = 200;
+    res.setHeader('Content-type', 'text/plain');
+    next();
+}
 
 dish_router.route('/')
-    .all((req, res, next) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/plain');
-        next();
-    })
+    .all(header)
     .get((req, res, next) => {
         res.end('Will send all the dishes to you!');
     })
@@ -27,12 +27,8 @@ dish_router.route('/')
         res.end('Deleting all the dishes!');
     });
 
-dish_router_id.route('/:dishId')
-    .all((req, res, next) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/plain');
-        next();
-    })
+dish_router.route('/:dishId')
+    .all(header)
     .get((req, res, next) => {
         res.end(`Will send details of the dish: ${req.params.dishId} to you!`);
     })
@@ -50,4 +46,3 @@ dish_router_id.route('/:dishId')
 
 
 module.exports = dish_router;
-module.exports = dish_router_id;
